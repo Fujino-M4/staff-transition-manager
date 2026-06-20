@@ -1,25 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { getEventTypes, saveEventTypes, getEvents } from "@/lib/db";
 
-export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "未ログイン" }, { status: 401 });
-    if (!session.isAdmin) return NextResponse.json({ error: "管理者のみ操作できます" }, { status: 403 });
+    if (!session.isAdmin) return NextResponse.json({ error: "管理者のみ" }, { status: 403 });
 
     const { id } = await params;
-    const type = await prisma.eventTypeDefinition.findUnique({ where: { id } });
-    if (!type) return NextResponse.json({ error: "見つかりません" }, { status: 404 });
+    const types = getEventTypes();
+    const target = types.find((t) => t.id === id);
+    if (!target) return NextResponse.json({ error: "見つかりません" }, { status: 404 });
 
-    const usedCount = await prisma.hrEvent.count({ where: { eventType: type.name } });
-    if (usedCount > 0)
-      return NextResponse.json(
-        { error: `この種別はすでに ${usedCount} 件のイベントで使用中のため削除できません` },
-        { status: 409 }
-      );
+    const events = getEvents();
+    const inUse = events.some((e) => e.deletedAt === null && e.eventType === target.name);
+    if (inUse)
+      return NextResponse.json({ error: "この種別は使用中のため削除できません" }, { status: 409 });
 
-    await prisma.eventTypeDefinition.delete({ where: { id } });
+    saveEventTypes(types.filter((t) => t.id !== id));
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error(e);

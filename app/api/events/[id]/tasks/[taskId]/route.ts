@@ -1,46 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { getEvents, saveEvents, getDepartments, getUsers, resolveEvent, nowIso } from "@/lib/db";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; taskId: string }> }
 ) {
-  const session = await getSession();
-  if (!session) return NextResponse.json({ error: "未ログイン" }, { status: 401 });
+  try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "未ログイン" }, { status: 401 });
 
-  const { taskId } = await params;
-  const body = await req.json();
+    const { id, taskId } = await params;
+    const body = await req.json();
+    const events = getEvents();
+    const eventIdx = events.findIndex((e) => e.id === id);
+    if (eventIdx === -1) return NextResponse.json({ error: "イベントが見つかりません" }, { status: 404 });
 
-  // チェック切り替え
-  if ("isDone" in body) {
-    const isDone: boolean = body.isDone;
-    const task = await prisma.eventTask.update({
-      where: { id: taskId },
-      data: {
-        isDone,
-        doneById: isDone ? session.userId : null,
-        doneAt: isDone ? new Date() : null,
-      },
-      include: { doneBy: { select: { displayName: true } } },
-    });
-    return NextResponse.json(task);
+    const taskIdx = events[eventIdx].tasks.findIndex((t) => t.id === taskId);
+    if (taskIdx === -1) return NextResponse.json({ error: "タスクが見つかりません" }, { status: 404 });
+
+    const now = nowIso();
+    const task = { ...events[eventIdx].tasks[taskIdx], updatedAt: now };
+
+    if (typeof body.isDone === "boolean") {
+      task.isDone = body.isDone;
+      task.doneById = body.isDone ? session.userId : null;
+      task.doneAt = body.isDone ? now : null;
+    }
+
+    if (typeof body.memo === "string") {
+      task.memo = body.memo.trim() || null;
+      task.memoUpdatedById = session.userId;
+      task.memoUpdatedAt = now;
+    }
+
+    events[eventIdx].tasks[taskIdx] = task;
+    events[eventIdx] = { ...events[eventIdx], updatedAt: now };
+    saveEvents(events);
+
+    const users = getUsers();
+    const depts = getDepartments();
+    return NextResponse.json(resolveEvent(events[eventIdx], users, depts));
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "サーバーエラー" }, { status: 500 });
   }
-
-  // メモ更新
-  if ("memo" in body) {
-    const memo: string = body.memo;
-    const task = await prisma.eventTask.update({
-      where: { id: taskId },
-      data: {
-        memo: memo || null,
-        memoUpdatedById: memo.trim() ? session.userId : null,
-        memoUpdatedAt: memo.trim() ? new Date() : null,
-      },
-      include: { memoUpdatedBy: { select: { displayName: true } } },
-    });
-    return NextResponse.json(task);
-  }
-
-  return NextResponse.json({ error: "不正なリクエスト" }, { status: 400 });
 }

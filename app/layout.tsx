@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Inter は欧文・数字部分にだけ適用したい（日本語はシステム日本語フォントに任せる）。
 // variable で `--font-inter` を発行し、`globals.css` の `--font-sans` で参照する。
@@ -29,9 +28,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        {/* shadcn/ui の Sidebar コンポーネント（SidebarMenuButton の collapsed
-            時 tooltip 等）が要求するためアプリ全体をラップする。 */}
-        <TooltipProvider delay={300}>{children}</TooltipProvider>
+        {children}
       </body>
     </html>
   );

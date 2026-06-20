@@ -1,0 +1,6 @@
+[
+  { "id": "et1", "name": "入社", "sortOrder": 0, "createdAt": "2026-01-01T00:00:00.000Z" },
+  { "id": "et2", "name": "退社", "sortOrder": 1, "createdAt": "2026-01-01T00:00:00.000Z" },
+  { "id": "et3", "name": "社内異動", "sortOrder": 2, "createdAt": "2026-01-01T00:00:00.000Z" },
+  { "id": "et4", "name": "帰任", "sortOrder": 3, "createdAt": "2026-01-01T00:00:00.000Z" }
+]

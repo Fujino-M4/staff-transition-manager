@@ -1,10 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) throw new Error("JWT_SECRET 環境変数が設定されていません");
-const SECRET = new TextEncoder().encode(jwtSecret);
-const COOKIE_NAME = "hr-tool-session";
+const SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET ?? "staff-transition-manager-dev-secret"
+);
+const COOKIE_NAME = "stm-session";
 
 export type SessionPayload = {
   userId: string;

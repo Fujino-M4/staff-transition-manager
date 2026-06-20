@@ -6,7 +6,6 @@ import {
   Download, X, LogOut, Eye, EyeOff, ChevronUp, ChevronDown, Clock, PauseCircle, Pencil, Search, RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -753,7 +752,7 @@ export default function Page() {
               </button>
             )}
           </div>
-          <ScrollArea className="flex-1">
+          <div className="flex-1 overflow-y-auto">
             {showTrash ? (
               <div className="flex flex-col gap-0 p-2">
                 {trashedEvents.length === 0 && (
@@ -873,7 +872,7 @@ export default function Page() {
                 })}
               </div>
             )}
-          </ScrollArea>
+          </div>
         </div>
 
         {/* 中右ペイン: タスクチェックリスト */}
@@ -987,7 +986,7 @@ export default function Page() {
               </div>
             </div>
 
-            <ScrollArea className="flex-1">
+            <div className="flex-1 overflow-y-auto">
               <div className="flex flex-col gap-6 p-4">
                 {selectedTasksByCategory.map(({ cat, tasks }, i) => (
                   <div key={cat}>
@@ -1002,7 +1001,7 @@ export default function Page() {
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center border-r border-border text-sm text-muted-foreground">
@@ -1529,7 +1528,7 @@ function SettingsDialog({
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <ScrollArea className="h-60">
+              <div className="h-60 overflow-y-auto">
                 <div className="flex flex-col gap-0.5 pr-2">
                   {activeTasks.map((task, idx, arr) => (
                     <div
@@ -1576,7 +1575,7 @@ function SettingsDialog({
                     </p>
                   )}
                 </div>
-              </ScrollArea>
+              </div>
 
               <Separator />
               <div className="flex items-center gap-2">

@@ -1,0 +1,16 @@
+[
+  { "id": "td01", "eventType": "入社", "category": "DXS", "label": "PC手配", "sortOrder": 0, "isActive": true },
+  { "id": "td02", "eventType": "入社", "category": "DXS", "label": "アカウント発行（AD/M365）", "sortOrder": 1, "isActive": true },
+  { "id": "td03", "eventType": "入社", "category": "DXS", "label": "Teams設定", "sortOrder": 2, "isActive": true },
+  { "id": "td04", "eventType": "入社", "category": "HR", "label": "雇用契約書作成", "sortOrder": 3, "isActive": true },
+  { "id": "td05", "eventType": "入社", "category": "HR", "label": "社会保険手続き", "sortOrder": 4, "isActive": true },
+  { "id": "td06", "eventType": "入社", "category": "GA", "label": "入館証発行", "sortOrder": 5, "isActive": true },
+  { "id": "td07", "eventType": "退社", "category": "DXS", "label": "アカウント停止（AD/M365）", "sortOrder": 0, "isActive": true },
+  { "id": "td08", "eventType": "退社", "category": "DXS", "label": "PC回収", "sortOrder": 1, "isActive": true },
+  { "id": "td09", "eventType": "退社", "category": "HR", "label": "退職手続き（雇用保険等）", "sortOrder": 2, "isActive": true },
+  { "id": "td10", "eventType": "退社", "category": "GA", "label": "入館証回収", "sortOrder": 3, "isActive": true },
+  { "id": "td11", "eventType": "社内異動", "category": "DXS", "label": "アクセス権変更", "sortOrder": 0, "isActive": true },
+  { "id": "td12", "eventType": "社内異動", "category": "HR", "label": "辞令交付", "sortOrder": 1, "isActive": true },
+  { "id": "td13", "eventType": "帰任", "category": "DXS", "label": "アクセス権復元", "sortOrder": 0, "isActive": true },
+  { "id": "td14", "eventType": "帰任", "category": "HR", "label": "帰任手続き", "sortOrder": 1, "isActive": true }
+]
