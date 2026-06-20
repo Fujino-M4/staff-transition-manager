@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, type ChangeEvent } from "react";
 import {
   Check, Hash, Building2, Calendar, MessageSquare, Plus, Trash2, Settings,
-  Download, X, LogOut, Eye, EyeOff, ChevronUp, ChevronDown, Clock, PauseCircle, Pencil, Search, RotateCcw,
+  Download, Upload, X, LogOut, Eye, EyeOff, ChevronUp, ChevronDown, Clock, PauseCircle, Pencil, Search, RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -486,6 +486,28 @@ export default function Page() {
     downloadCSV("task-templates.csv", [header, ...rows].join("\n"));
   };
 
+  const importEventsCSV = async (csv: string): Promise<ImportResult> => {
+    const res = await fetch("/api/import/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ csv }),
+    });
+    const body = await res.json();
+    if (res.ok) await Promise.all([refreshEvents(), refreshDepartments()]);
+    return { ok: res.ok, ...body };
+  };
+
+  const importTaskTemplatesCSV = async (csv: string): Promise<ImportResult> => {
+    const res = await fetch("/api/import/task-definitions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ csv }),
+    });
+    const body = await res.json();
+    if (res.ok) await refreshTaskDefinitions();
+    return { ok: res.ok, ...body };
+  };
+
   // ===== 選択状態 =====
 
   const selectedEvent = events.find((e) => e.id === selectedId);
@@ -633,6 +655,8 @@ export default function Page() {
         onMoveTask={moveTaskDefinition}
         onExportEvents={exportEventsCSV}
         onExportTemplates={exportTaskTemplatesCSV}
+        onImportEvents={importEventsCSV}
+        onImportTemplates={importTaskTemplatesCSV}
         currentUser={currentUser}
         users={users}
         onAddUser={addUser}
@@ -1157,6 +1181,93 @@ function downloadCSV(filename: string, content: string) {
   URL.revokeObjectURL(url);
 }
 
+type ImportResult = {
+  ok: boolean;
+  created?: number;
+  updated?: number;
+  errors?: string[];
+  error?: string;
+};
+
+function formatImportResult(result: ImportResult): string {
+  if (!result.ok) return result.error ?? "インポートに失敗しました";
+  const parts = [`新規 ${result.created ?? 0} 件`, `更新 ${result.updated ?? 0} 件`];
+  if (result.errors && result.errors.length > 0) {
+    parts.push(`警告 ${result.errors.length} 件`);
+  }
+  return parts.join("、");
+}
+
+function ImportCSVRow({
+  title,
+  subtitle,
+  accept,
+  onImport,
+}: {
+  title: string;
+  subtitle: string;
+  accept: string;
+  onImport: (csv: string) => Promise<ImportResult>;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [status, setStatus] = useState<{ message: string; isError: boolean } | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLoading(true);
+    setStatus(null);
+    try {
+      const text = await file.text();
+      const result = await onImport(text);
+      setStatus({
+        message: formatImportResult(result),
+        isError: !result.ok,
+      });
+    } catch {
+      setStatus({ message: "インポートに失敗しました", isError: true });
+    } finally {
+      setLoading(false);
+      e.target.value = "";
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5 rounded-md border border-border p-3">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium">{title}</p>
+          <p className="text-xs text-muted-foreground">{subtitle}</p>
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <input
+            ref={inputRef}
+            type="file"
+            accept={accept}
+            className="hidden"
+            onChange={handleFile}
+          />
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => inputRef.current?.click()}
+            className="flex items-center gap-1.5 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50"
+          >
+            <Upload className="size-3.5" />
+            {loading ? "取り込み中…" : "インポート"}
+          </button>
+        </div>
+      </div>
+      {status && (
+        <p className={cn("text-xs", status.isError ? "text-destructive" : "text-muted-foreground")}>
+          {status.message}
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ===== イベント追加ダイアログ =====
 
 function AddEventDialog({
@@ -1428,6 +1539,8 @@ function SettingsDialog({
   onMoveTask,
   onExportEvents,
   onExportTemplates,
+  onImportEvents,
+  onImportTemplates,
   currentUser,
   users,
   onAddUser,
@@ -1445,6 +1558,8 @@ function SettingsDialog({
   onMoveTask: (id: string, direction: "up" | "down") => void;
   onExportEvents: () => void;
   onExportTemplates: () => void;
+  onImportEvents: (csv: string) => Promise<ImportResult>;
+  onImportTemplates: (csv: string) => Promise<ImportResult>;
   currentUser: DbUser;
   users: DbUser[];
   onAddUser: (data: { username: string; password: string; displayName: string; isAdmin: boolean }) => Promise<Response>;
@@ -1498,7 +1613,7 @@ function SettingsDialog({
             >
               {t === "tasks" ? "タスク項目管理"
                 : t === "event-types" ? "イベント種別"
-                : t === "io" ? "エクスポート"
+                : t === "io" ? "入出力"
                 : "ユーザー管理"}
             </button>
           ))}
@@ -1619,6 +1734,33 @@ function SettingsDialog({
 
         {tab === "io" && (
           <div className="flex min-h-[360px] flex-col gap-6 py-2">
+            <div className="flex flex-col gap-3">
+              <div>
+                <p className="text-sm font-medium">インポート</p>
+                <p className="text-xs text-muted-foreground">
+                  エクスポートした CSV を取り込みます（同じ id の行は更新、それ以外は新規追加）
+                </p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <ImportCSVRow
+                  title="イベント一覧"
+                  subtitle="events.csv — 対象者データ"
+                  accept=".csv,text/csv"
+                  onImport={onImportEvents}
+                />
+                {currentUser.isAdmin && (
+                  <ImportCSVRow
+                    title="タスクテンプレート"
+                    subtitle="task-templates.csv — タスク項目定義"
+                    accept=".csv,text/csv"
+                    onImport={onImportTemplates}
+                  />
+                )}
+              </div>
+            </div>
+
+            <Separator />
+
             <div className="flex flex-col gap-3">
               <div>
                 <p className="text-sm font-medium">エクスポート</p>
