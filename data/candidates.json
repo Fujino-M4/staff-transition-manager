@@ -1,0 +1,200 @@
+[
+  {
+    "id": "e1",
+    "profile": {
+      "name": "山田 太郎",
+      "birthday": "1995-03-15",
+      "source": "入社",
+      "email": "t.yamada@example.com",
+      "phone": "090-1234-5678",
+      "address": "東京都渋谷区",
+      "recruiter": "人事部 鈴木 一郎",
+      "desiredSalaryMin": "450",
+      "desiredSalaryMax": "500",
+      "availableStartDate": "2026-06-01",
+      "careerText": "前職はITエンジニア。React/TypeScript経験3年。SaaS企業勤務。",
+      "motivationFull": ""
+    },
+    "scorecards": [
+      {
+        "stage": "screening",
+        "label": "ITタスク",
+        "date": "2026-05-08",
+        "format": "社内対応",
+        "interviewer": "IT部 田中 誠",
+        "decision": "通過",
+        "comment": "メールアカウント・PCセットアップ完了。社内システムのアクセス権付与済み。入館証は6/1発行予定。",
+        "axisScores": {
+          "achievements": 5,
+          "thinkingAbility": null,
+          "communication": null,
+          "cultureFit": null
+        },
+        "attachments": []
+      }
+    ],
+    "stage": "first"
+  },
+  {
+    "id": "e2",
+    "profile": {
+      "name": "鈴木 花子",
+      "birthday": "1998-07-22",
+      "source": "入社",
+      "email": "h.suzuki@example.com",
+      "phone": "080-2345-6789",
+      "address": "神奈川県横浜市",
+      "recruiter": "人事部 佐藤 美咲",
+      "desiredSalaryMin": "",
+      "desiredSalaryMax": "",
+      "availableStartDate": "2026-06-15",
+      "careerText": "新卒入社。大学では情報工学専攻。",
+      "motivationFull": ""
+    },
+    "scorecards": [],
+    "stage": "screening"
+  },
+  {
+    "id": "e3",
+    "profile": {
+      "name": "木村 春奈",
+      "birthday": "2001-11-30",
+      "source": "入社",
+      "email": "h.kimura@example.com",
+      "phone": "070-3456-7890",
+      "address": "埼玉県さいたま市",
+      "recruiter": "人事部 佐藤 美咲",
+      "desiredSalaryMin": "",
+      "desiredSalaryMax": "",
+      "availableStartDate": "2026-07-01",
+      "careerText": "新卒入社。大学では経営学専攻。",
+      "motivationFull": ""
+    },
+    "scorecards": [],
+    "stage": "screening"
+  },
+  {
+    "id": "e4",
+    "profile": {
+      "name": "加藤 誠",
+      "birthday": "1990-05-10",
+      "source": "入社",
+      "email": "m.kato@example.com",
+      "phone": "090-4567-8901",
+      "address": "東京都世田谷区",
+      "recruiter": "人事部 鈴木 一郎",
+      "desiredSalaryMin": "600",
+      "desiredSalaryMax": "700",
+      "availableStartDate": "2026-05-01",
+      "careerText": "元マネージャー職。事業開発・プロジェクトマネジメント経験10年。",
+      "motivationFull": ""
+    },
+    "scorecards": [
+      {
+        "stage": "screening",
+        "label": "ITタスク",
+        "date": "2026-04-20",
+        "format": "社内対応",
+        "interviewer": "IT部 田中 誠",
+        "decision": "通過",
+        "comment": "全ITタスク完了済み。",
+        "axisScores": {
+          "achievements": 5,
+          "thinkingAbility": null,
+          "communication": null,
+          "cultureFit": null
+        },
+        "attachments": []
+      },
+      {
+        "stage": "first",
+        "label": "HRタスク",
+        "date": "2026-04-25",
+        "format": "書類手続き",
+        "interviewer": "HR部 鈴木 一郎",
+        "decision": "通過",
+        "comment": "雇用契約書・社保手続き完了。給与振込口座登録済み。",
+        "axisScores": {
+          "achievements": 5,
+          "thinkingAbility": 5,
+          "communication": null,
+          "cultureFit": null
+        },
+        "attachments": []
+      }
+    ],
+    "stage": "second"
+  },
+  {
+    "id": "e5",
+    "profile": {
+      "name": "田中 二郎",
+      "birthday": "1985-08-18",
+      "source": "退社",
+      "email": "j.tanaka@example.com",
+      "phone": "090-5678-9012",
+      "address": "東京都品川区",
+      "recruiter": "人事部 鈴木 一郎",
+      "desiredSalaryMin": "",
+      "desiredSalaryMax": "",
+      "availableStartDate": "2026-05-31",
+      "careerText": "エンジニアリングマネージャー職。在籍8年。",
+      "motivationFull": ""
+    },
+    "scorecards": [
+      {
+        "stage": "screening",
+        "label": "ITタスク",
+        "date": "2026-05-05",
+        "format": "社内対応",
+        "interviewer": "IT部 田中 誠",
+        "decision": "通過",
+        "comment": "アカウント停止スケジュール済み（2026/5/31）。機器回収日: 5/30。",
+        "axisScores": {
+          "achievements": 4,
+          "thinkingAbility": null,
+          "communication": null,
+          "cultureFit": null
+        },
+        "attachments": []
+      }
+    ],
+    "stage": "first"
+  },
+  {
+    "id": "e6",
+    "profile": {
+      "name": "佐藤 美咲",
+      "birthday": "1993-02-14",
+      "source": "異動（営業部 → 開発部）",
+      "email": "m.sato@example.com",
+      "phone": "080-6789-0123",
+      "address": "東京都新宿区",
+      "recruiter": "人事部 鈴木 一郎",
+      "desiredSalaryMin": "",
+      "desiredSalaryMax": "",
+      "availableStartDate": "2026-06-01",
+      "careerText": "営業部で5年勤務。異動後は開発部にてビジネス開発担当。",
+      "motivationFull": ""
+    },
+    "scorecards": [
+      {
+        "stage": "screening",
+        "label": "ITタスク",
+        "date": "2026-05-09",
+        "format": "社内対応",
+        "interviewer": "IT部 田中 誠",
+        "decision": "通過",
+        "comment": "開発部向けシステムアクセス権限付与済み。",
+        "axisScores": {
+          "achievements": 5,
+          "thinkingAbility": null,
+          "communication": null,
+          "cultureFit": null
+        },
+        "attachments": []
+      }
+    ],
+    "stage": "first"
+  }
+]
